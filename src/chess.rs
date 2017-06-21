@@ -11,22 +11,22 @@ impl Chess {
         use self::PieceType::*;
         use self::Color::*;
         let positions = [
-            ("A1", Piece{piecetype: Rook,   color: White}), ("B1", Piece{piecetype: Knight, color: White}),
-            ("C1", Piece{piecetype: Bishop, color: White}), ("D1", Piece{piecetype: King,   color: White}),
-            ("E1", Piece{piecetype: Queen,  color: White}), ("F1", Piece{piecetype: Bishop, color: White}),
-            ("G1", Piece{piecetype: Knight, color: White}), ("H1", Piece{piecetype: Rook,   color: White}),
-            ("A2", Piece{piecetype: Pawn,   color: White}), ("B2", Piece{piecetype: Pawn,   color: White}),
-            ("C2", Piece{piecetype: Pawn,   color: White}), ("D2", Piece{piecetype: Pawn,   color: White}),
-            ("E2", Piece{piecetype: Pawn,   color: White}), ("F2", Piece{piecetype: Pawn,   color: White}),
-            ("G2", Piece{piecetype: Pawn,   color: White}), ("H2", Piece{piecetype: Pawn,   color: White}),
-            ("A8", Piece{piecetype: Rook,   color: Black}), ("B8", Piece{piecetype: Knight, color: Black}),
-            ("C8", Piece{piecetype: Bishop, color: Black}), ("D8", Piece{piecetype: King,   color: Black}),
-            ("E8", Piece{piecetype: Queen,  color: Black}), ("F8", Piece{piecetype: Bishop, color: Black}),
-            ("G8", Piece{piecetype: Knight, color: Black}), ("H8", Piece{piecetype: Rook,   color: Black}),
-            ("A7", Piece{piecetype: Pawn,   color: Black}), ("B7", Piece{piecetype: Pawn,   color: Black}),
-            ("C7", Piece{piecetype: Pawn,   color: Black}), ("D7", Piece{piecetype: Pawn,   color: Black}),
-            ("E7", Piece{piecetype: Pawn,   color: Black}), ("F7", Piece{piecetype: Pawn,   color: Black}),
-            ("G7", Piece{piecetype: Pawn,   color: Black}), ("H7", Piece{piecetype: Pawn,   color: Black})
+            ("A1", Piece::new(White, Rook)),   ("B1", Piece::new(White, Knight)),
+            ("C1", Piece::new(White, Bishop)), ("D1", Piece::new(White, Queen)),
+            ("E1", Piece::new(White, King)),   ("F1", Piece::new(White, Bishop)),
+            ("G1", Piece::new(White, Knight)), ("H1", Piece::new(White, Rook)),
+            ("A2", Piece::new(White, Pawn)),   ("B2", Piece::new(White, Pawn)),
+            ("C2", Piece::new(White, Pawn)),   ("D2", Piece::new(White, Pawn)),
+            ("E2", Piece::new(White, Pawn)),   ("F2", Piece::new(White, Pawn)),
+            ("G2", Piece::new(White, Pawn)),   ("H2", Piece::new(White, Pawn)),
+            ("A8", Piece::new(Black, Rook)),   ("B8", Piece::new(Black, Knight)),
+            ("C8", Piece::new(Black, Bishop)), ("D8", Piece::new(Black, Queen)),
+            ("E8", Piece::new(Black, King)),   ("F8", Piece::new(Black, Bishop)),
+            ("G8", Piece::new(Black, Knight)), ("H8", Piece::new(Black, Rook)),
+            ("A7", Piece::new(Black, Pawn)),   ("B7", Piece::new(Black, Pawn)),
+            ("C7", Piece::new(Black, Pawn)),   ("D7", Piece::new(Black, Pawn)),
+            ("E7", Piece::new(Black, Pawn)),   ("F7", Piece::new(Black, Pawn)),
+            ("G7", Piece::new(Black, Pawn)),   ("H7", Piece::new(Black, Pawn)),
         ];
 
         let mut newboard: HashMap<String, Piece> = HashMap::new();
@@ -121,6 +121,15 @@ impl std::fmt::Display for Chess {
 pub struct Piece {
     pub color: Color,
     pub piecetype: PieceType
+}
+
+impl Piece {
+    pub fn new(color: Color, piece_type: PieceType) -> Piece {
+        Piece {
+            color: color,
+            piecetype: piece_type
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
