@@ -13,6 +13,7 @@ fn main() {
     
     loop {
         println!("{}", game);
+        println!("It is {}'s turn.", game.next_player());
         
         let mut input = String::new();
         io::stdin().read_line(&mut input)

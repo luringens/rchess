@@ -2,7 +2,8 @@ use std;
 use std::collections::HashMap;
 
 pub struct Chess {
-    board: HashMap<String, Piece>
+    board: HashMap<String, Piece>,
+    next_player: Color
 }
 
 impl Chess {
@@ -33,7 +34,7 @@ impl Chess {
             newboard.insert(String::from(set.0), set.1);
         }
 
-        Chess { board: newboard }
+        Chess { board: newboard, next_player: White }
     }
 
     pub fn perform_move(&mut self, move_to_perform: &str) -> Result<(), &'static str> {
@@ -45,6 +46,10 @@ impl Chess {
         let piece = self.board.get(from).unwrap().clone();
         self.board.insert(String::from(to), piece);
         self.board.remove(from);
+        self.next_player = match self.next_player {
+            Color::White => Color::Black,
+            Color::Black => Color::White
+        };
         Ok(())
     }
 
@@ -65,12 +70,31 @@ impl Chess {
         }
         if !valid { return false; }
 
-        // TODO: Check that the correct player is moving
+        // Get pieces
+        let (from, to) = move_to_perform.split_at(2);
+        let piece_to_move = self.board.get(from);
+        let piece_to_kill = self.board.get(to);
+
+        // Check that we are moving a piece, and it's of the correct color        
+        match piece_to_move {
+            Some(piece) => if piece.color != self.next_player { return false; },
+            None => return false
+        }        
+        
+        // Check that if we are landing on another piece, it is hostile
+        match piece_to_kill {
+            Some(piece) => if piece.color == self.next_player { return false; },
+            None => { }
+        }
+
         // TODO: Check that the piece is allowed to move like this
-        // TODO: Check that if we are landing on another piece, it must be hostile
         // TODO: Check for mate rules
 
         true
+    }
+
+    pub fn next_player(&self) -> Color {
+        self.next_player
     }
 }
 
@@ -99,10 +123,19 @@ pub struct Piece {
     pub piecetype: PieceType
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Color {
     Black,
     White    
+}
+
+impl std::fmt::Display for Color {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(f, "{}", match *self {
+            Color::White => "white",
+            Color::Black => "black"
+        })
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
