@@ -101,17 +101,28 @@ impl Chess {
 #[allow(unused_variables)]
 impl std::fmt::Display for Chess {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        // Print top row
+        println!("  A B C D E F G H");
+
         let letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         for x in 1..9 {
+
+            // Print the row number first in each row.
             print!("{} ", x);
+
+            // Print each slot. Print . if empty, print piece otherwise.
             for letter in letters.iter() {
                 print!("{} ", match self.board.get(&format!("{}{}", letter, x)) {
                     Some(t) => t.letter(),
                     None => "."
                 });
             }
-            println!();
+
+            // ...and print the row number last as well.
+            println!("{} ", x);
         }
+
+        // Print bottom row
         println!("  A B C D E F G H");
         Ok(())
     }
