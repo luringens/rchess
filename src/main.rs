@@ -11,8 +11,7 @@ fn main() {
     println!("Enter the field to move from and to in the format 'A2A4'.");
     println!("Type 'quit' to stop playing.");
     
-    let mut running = true;
-    while running {
+    loop {
         println!("{}", game);
         
         let mut input = String::new();
@@ -22,7 +21,7 @@ fn main() {
 
         print!("{}", clear);
         match input.as_ref() {
-            "quit" => running = false,
+            "quit" => return,
             _ => match game.perform_move(&input) {
                 Err(a) => println!("{}", a),
                 Ok(_) => println!("Done!")
