@@ -49,8 +49,28 @@ impl Chess {
     }
 
     fn is_valid_move(&self, move_to_perform: &str) -> bool {
-        // TODO: Check rules
-        move_to_perform.len() == 4
+        // Check length
+        if move_to_perform.len() != 4 { return false };
+
+        // Check the move is withing bounds
+        let valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        let valid_numbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
+        let mut valid = true;
+        for (position, character) in move_to_perform.char_indices() {
+            valid = valid && match position % 2{
+                0 => valid_letters.contains(&character),
+                1 => valid_numbers.contains(&character),
+                _ => panic!("This can't happen.")
+            }
+        }
+        if !valid { return false; }
+
+        // TODO: Check that the correct player is moving
+        // TODO: Check that the piece is allowed to move like this
+        // TODO: Check that if we are landing on another piece, it must be hostile
+        // TODO: Check for mate rules
+
+        true
     }
 }
 
