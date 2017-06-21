@@ -32,16 +32,25 @@ struct Chess {
 
 impl Chess {
     pub fn new() -> Chess {
-        use Piece::*;
+        use PieceType::*;
+        use Color::*;
         let positions = [
-            ("A1", WRook),   ("B1", WKnight), ("C1", WBishop), ("D1", WQueen),
-            ("E1", WKing),   ("F1", WBishop), ("G1", WKnight), ("H1", WRook),
-            ("A2", WPawn),   ("B2", WPawn),   ("C2", WPawn),   ("D2", WPawn),
-            ("E2", WPawn),   ("F2", WPawn),   ("G2", WPawn),   ("H2", WPawn),
-            ("A8", BRook),   ("B8", BKnight), ("C8", BBishop), ("D8", BQueen),
-            ("E8", BKing),   ("F8", BBishop), ("G8", BKnight), ("H8", BRook),
-            ("A7", BPawn),   ("B7", BPawn),   ("C7", BPawn),   ("D7", BPawn),
-            ("E7", BPawn),   ("F7", BPawn),   ("G7", BPawn),   ("H7", BPawn)
+            ("A1", Piece{piecetype: Rook,   color: White}), ("B1", Piece{piecetype: Knight, color: White}),
+            ("C1", Piece{piecetype: Bishop, color: White}), ("D1", Piece{piecetype: King,   color: White}),
+            ("E1", Piece{piecetype: Queen,  color: White}), ("F1", Piece{piecetype: Bishop, color: White}),
+            ("G1", Piece{piecetype: Knight, color: White}), ("H1", Piece{piecetype: Rook,   color: White}),
+            ("A2", Piece{piecetype: Pawn,   color: White}), ("B2", Piece{piecetype: Pawn,   color: White}),
+            ("C2", Piece{piecetype: Pawn,   color: White}), ("D2", Piece{piecetype: Pawn,   color: White}),
+            ("E2", Piece{piecetype: Pawn,   color: White}), ("F2", Piece{piecetype: Pawn,   color: White}),
+            ("G2", Piece{piecetype: Pawn,   color: White}), ("H2", Piece{piecetype: Pawn,   color: White}),
+            ("A8", Piece{piecetype: Rook,   color: Black}), ("B8", Piece{piecetype: Knight, color: Black}),
+            ("C8", Piece{piecetype: Bishop, color: Black}), ("D8", Piece{piecetype: King,   color: Black}),
+            ("E8", Piece{piecetype: Queen,  color: Black}), ("F8", Piece{piecetype: Bishop, color: Black}),
+            ("G8", Piece{piecetype: Knight, color: Black}), ("H8", Piece{piecetype: Rook,   color: Black}),
+            ("A7", Piece{piecetype: Pawn,   color: Black}), ("B7", Piece{piecetype: Pawn,   color: Black}),
+            ("C7", Piece{piecetype: Pawn,   color: Black}), ("D7", Piece{piecetype: Pawn,   color: Black}),
+            ("E7", Piece{piecetype: Pawn,   color: Black}), ("F7", Piece{piecetype: Pawn,   color: Black}),
+            ("G7", Piece{piecetype: Pawn,   color: Black}), ("H7", Piece{piecetype: Pawn,   color: Black})
         ];
 
         let mut newboard: HashMap<String, Piece> = HashMap::new();
@@ -90,37 +99,44 @@ impl std::fmt::Display for Chess {
 }
 
 #[derive(Debug, Clone, Copy)]
-enum Piece {
-    BKing,
-    BQueen,
-    BRook,
-    BBishop,
-    BKnight,
-    BPawn,
-    WKing,
-    WQueen,
-    WRook,
-    WBishop,
-    WKnight,
-    WPawn
+struct Piece {
+    pub color: Color,
+    pub piecetype: PieceType
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Color {
+    Black,
+    White    
+}
+
+#[derive(Debug, Clone, Copy)]
+enum PieceType {
+    King,
+    Queen,
+    Rook,
+    Bishop,
+    Knight,
+    Pawn
 }
 
 impl Piece {
     fn letter(&self) -> &'static str {
-        use Piece::*;
-        match *self {
-            BKing   => "♚",
-            BQueen  => "♛",
-            BRook   => "♜",
-            BBishop => "♝",
-            BKnight => "♞",
-            BPawn   => "♟",
-            WKing   => "♔",
-            WQueen  => "♕",
-            WRook   => "♖",
-            WBishop => "♗",
-            WKnight => "♘",
-            WPawn   => "♙"
+        use PieceType::*;
+        use Color::*;
+        match (self.piecetype, self.color) {
+            (King,   White) => "♚",
+            (Queen,  White) => "♛",
+            (Bishop, White) => "♝",
+            (Knight, White) => "♞",
+            (Rook,   White) => "♜",
+            (Pawn,   White) => "♟",
+            (King,   Black) => "♔",
+            (Queen,  Black) => "♕",
+            (Bishop, Black) => "♗",
+            (Knight, Black) => "♘",
+            (Rook,   Black) => "♖",
+            (Pawn,   Black) => "♙"
         }
     }
 }
