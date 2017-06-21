@@ -58,17 +58,19 @@ impl Chess {
         if move_to_perform.len() != 4 { return false };
 
         // Check the move is withing bounds
-        let valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        let valid_numbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
-        let mut valid = true;
-        for (position, character) in move_to_perform.char_indices() {
-            valid = valid && match position % 2{
-                0 => valid_letters.contains(&character),
-                1 => valid_numbers.contains(&character),
-                _ => panic!("This can't happen.")
+        {
+            let valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+            let valid_numbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
+            let mut valid = true;
+            for (position, character) in move_to_perform.char_indices() {
+                valid = valid && match position % 2{
+                    0 => valid_letters.contains(&character),
+                    1 => valid_numbers.contains(&character),
+                    _ => panic!("This can't happen.")
+                }
             }
+            if !valid { return false; }
         }
-        if !valid { return false; }
 
         // Get pieces
         let (from, to) = move_to_perform.split_at(2);
