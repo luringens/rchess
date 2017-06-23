@@ -2,7 +2,7 @@ use std;
 use std::collections::HashMap;
 
 pub struct Chess {
-    board: HashMap<String, Piece>,
+    board: HashMap<(u32, u32), Piece>,
     next_player: Color
 }
 
@@ -11,33 +11,30 @@ impl Chess {
         use self::PieceType::*;
         use self::Color::*;
         let positions = [
-            ("A1", Piece::new(White, Rook)),   ("B1", Piece::new(White, Knight)),
-            ("C1", Piece::new(White, Bishop)), ("D1", Piece::new(White, Queen)),
-            ("E1", Piece::new(White, King)),   ("F1", Piece::new(White, Bishop)),
-            ("G1", Piece::new(White, Knight)), ("H1", Piece::new(White, Rook)),
-            ("A2", Piece::new(White, Pawn)),   ("B2", Piece::new(White, Pawn)),
-            ("C2", Piece::new(White, Pawn)),   ("D2", Piece::new(White, Pawn)),
-            ("E2", Piece::new(White, Pawn)),   ("F2", Piece::new(White, Pawn)),
-            ("G2", Piece::new(White, Pawn)),   ("H2", Piece::new(White, Pawn)),
-            ("A8", Piece::new(Black, Rook)),   ("B8", Piece::new(Black, Knight)),
-            ("C8", Piece::new(Black, Bishop)), ("D8", Piece::new(Black, Queen)),
-            ("E8", Piece::new(Black, King)),   ("F8", Piece::new(Black, Bishop)),
-            ("G8", Piece::new(Black, Knight)), ("H8", Piece::new(Black, Rook)),
-            ("A7", Piece::new(Black, Pawn)),   ("B7", Piece::new(Black, Pawn)),
-            ("C7", Piece::new(Black, Pawn)),   ("D7", Piece::new(Black, Pawn)),
-            ("E7", Piece::new(Black, Pawn)),   ("F7", Piece::new(Black, Pawn)),
-            ("G7", Piece::new(Black, Pawn)),   ("H7", Piece::new(Black, Pawn)),
+            ((2, 1), Piece::new(White, Rook)),   ((2, 1), Piece::new(White, Knight)),
+            ((4, 1), Piece::new(White, Bishop)), ((4, 1), Piece::new(White, Queen)),
+            ((6, 1), Piece::new(White, King)),   ((6, 1), Piece::new(White, Bishop)),
+            ((8, 1), Piece::new(White, Knight)), ((8, 1), Piece::new(White, Rook)),
+            ((2, 2), Piece::new(White, Pawn)),   ((2, 2), Piece::new(White, Pawn)),
+            ((4, 2), Piece::new(White, Pawn)),   ((4, 2), Piece::new(White, Pawn)),
+            ((6, 2), Piece::new(White, Pawn)),   ((6, 2), Piece::new(White, Pawn)),
+            ((8, 2), Piece::new(White, Pawn)),   ((8, 2), Piece::new(White, Pawn)),
+            ((2, 8), Piece::new(Black, Rook)),   ((2, 8), Piece::new(Black, Knight)),
+            ((4, 8), Piece::new(Black, Bishop)), ((4, 8), Piece::new(Black, Queen)),
+            ((6, 8), Piece::new(Black, King)),   ((6, 8), Piece::new(Black, Bishop)),
+            ((8, 8), Piece::new(Black, Knight)), ((8, 8), Piece::new(Black, Rook)),
+            ((2, 7), Piece::new(Black, Pawn)),   ((2, 7), Piece::new(Black, Pawn)),
+            ((4, 7), Piece::new(Black, Pawn)),   ((4, 7), Piece::new(Black, Pawn)),
+            ((6, 7), Piece::new(Black, Pawn)),   ((6, 7), Piece::new(Black, Pawn)),
+            ((8, 7), Piece::new(Black, Pawn)),   ((8, 7), Piece::new(Black, Pawn)),
         ];
-
-        let mut newboard: HashMap<String, Piece> = HashMap::new();
-        for set in positions.iter() {
-            newboard.insert(String::from(set.0), set.1);
-        }
-
+        let mut newboard: HashMap<(u32, u32), Piece> = HashMap::new();
+        for set in positions.iter() { newboard.insert(set.0, set.1);}
         Chess { board: newboard, next_player: White }
     }
 
-    pub fn perform_move(&mut self, move_to_perform: &str) -> Result<(), &'static str> {
+    pub fn perform_move(&mut self, move_to_perform: (&str)) -> Result<(), &'static str> {
+        let (from, to) = parse_input(move_to_perform)?;
         if !self.is_valid_move(move_to_perform) {
             return Result::Err("Invalid move");
         }
@@ -73,7 +70,9 @@ impl Chess {
         }
 
         // Get pieces
-        let (from, to) = move_to_perform.split_at(2);
+        let chars = move_to_perform.chars();
+        let to   = (Chess::col_nr(chars.nth(2)), chars.nth(3).to_digit(10));
+        let from = (Chess::col_nr(chars.nth(0)), chars.nth(1).to_digit(10));
         let piece_to_move = self.board.get(from);
         let piece_to_kill = self.board.get(to);
 
@@ -93,6 +92,14 @@ impl Chess {
         // TODO: Check for mate rules
 
         true
+    }
+
+    fn col_nr(x: char) -> u8 {
+        (x as u32 - 65) as u8
+    }
+
+    fn col_name(x: u32) -> char {
+        std::char::from_u32(x + 48).unwrap()
     }
 
     pub fn next_player(&self) -> Color {
